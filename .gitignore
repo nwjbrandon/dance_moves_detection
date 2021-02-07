@@ -1,0 +1,14 @@
+__pycache__/
+
+inputs/
+outputs/
+samples/
+results/
+.ipynb_checkpoints/
+
+*.pth
+*.log
+*.tar
+*.zip
+*.csv
+*.xlsx
