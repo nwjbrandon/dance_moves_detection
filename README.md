@@ -21,3 +21,5 @@ python3.7 -m pip install -r requirements.txt
 Refer to [link](notebooks/hapt/README.md) to understand the model selection and evaluation process on HAPT dataset for detecting dance moves in this project.
 ### HAPT Quantized
 Refer to [link](notebooks/hapt_quantized/README.md) to understand the accuracy and latency of models quantized using different methods.
+### HAPT NUS
+Refer to [link](notebooks/hapt_nus/README.md) to understand the models trained for the capstone project
