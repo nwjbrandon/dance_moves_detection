@@ -16,6 +16,12 @@ source venv/bin/activate
 python3.7 -m pip install -r requirements.txt
 ```
 
+### Setup With Docker
+```
+docker build -t ws .
+nvidia-docker run --shm-size=16g --ulimit memlock=-1 --ulimit stack=67108864 -v ~/dance_moves_detection:/workspace -p 8888:8888 -it ws bash
+```
+
 ## Notebooks
 ### HAPT 
 Refer to [link](notebooks/hapt/README.md) to understand the model selection and evaluation process on HAPT dataset for detecting dance moves in this project.
