@@ -3,7 +3,7 @@ import warnings
 import numpy as np
 import torch
 from joblib import load
-from utils import CNN, load_cnn_dataloader
+from utils import CNN, load_dataloader
 
 warnings.filterwarnings("ignore")
 
@@ -26,21 +26,23 @@ def scale_data(data, scaler, is_train=False):
 def main():
     # Prepare model
     model = CNN()
-    model.load_state_dict(torch.load("prelim_cnn.pth"))
+    model.load_state_dict(torch.load("cnn_model.pth"))
     model.eval()
 
     # Scale data
-    scaler = load("std_scaler.bin")
+    scaler = load("cnn_std_scaler.bin")
 
     # Prepare data
-    _, _, dataloader = load_cnn_dataloader()
+    _, _, dataloader = load_dataloader()
 
     # Run inference
     correct = 0
     total = 0
     for inputs, labels in dataloader:
-        inputs = scale_data(inputs, scaler)
-        inputs = torch.tensor(inputs)
+        inputs = inputs.numpy()  # convert to numpy
+        inputs = scale_data(inputs, scaler)  # scale features
+        inputs = torch.tensor(inputs)  # convert to tensor
+
         outputs = model(inputs.float())
         _, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)

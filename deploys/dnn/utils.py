@@ -9,44 +9,31 @@ from sklearn.model_selection import train_test_split
 warnings.filterwarnings("ignore")
 
 
-class CNN(nn.Module):
+class DNN(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv1d(5, 32, 3)
-        self.relu1 = nn.ReLU()
-        self.dp1 = nn.Dropout(0.6)
+        self.fc1 = nn.Linear(70, 70)
+        self.dp1 = nn.Dropout(0.1)
 
-        self.pool1 = nn.MaxPool1d(2)
-        self.flat1 = nn.Flatten()
-        self.dp2 = nn.Dropout(0.2)
+        self.fc2 = nn.Linear(70, 50)
+        self.dp2 = nn.Dropout(0.1)
 
-        self.fc1 = nn.Linear(928, 256)
-        self.relu2 = nn.ReLU()
-        self.dp3 = nn.Dropout(0.2)
+        self.fc3 = nn.Linear(50, 20)
+        self.dp3 = nn.Dropout(0.1)
 
-        self.fc2 = nn.Linear(256, 128)
-        self.dp4 = nn.Dropout(0.2)
-
-        self.fc3 = nn.Linear(128, 9)
+        self.fc4 = nn.Linear(20, 9)
 
     def forward(self, x):
-        x = self.conv1(x)
-        x = self.relu1(x)
+        x = self.fc1(x)
         x = self.dp1(x)
 
-        x = self.pool1(x)
-        x = self.flat1(x)
+        x = self.fc2(x)
         x = self.dp2(x)
 
-        x = self.fc1(x)
-        x = self.relu2(x)
+        x = self.fc3(x)
         x = self.dp3(x)
 
-        x = self.fc2(x)
-        x = self.dp4(x)
-
-        x = self.fc3(x)
-
+        x = self.fc4(x)
         return x
 
 
