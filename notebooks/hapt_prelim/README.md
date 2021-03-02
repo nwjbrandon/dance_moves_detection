@@ -9,9 +9,9 @@ CNN, SVC, and DNN models are explored.
 Preliminary Results
 | model                        | acc_valid      | acc_test       |      
 | ---------------------------- | :------------: | :------------: |
-| SVC                          | 0.98396        | 0.97908        |
-| DNN                          | 0.97628        | 0.97350        |
-| CNN                          | 0.97486        | 0.97493        |
+| SVC                          | 0.998985       | 1.000000       |
+| DNN                          | 0.997972       | 0.997976       |
+| CNN                          | 0.951318       | 0.959514       |
 
 # Conclusion
 All three models performed well.

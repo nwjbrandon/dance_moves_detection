@@ -27,5 +27,7 @@ nvidia-docker run --shm-size=16g --ulimit memlock=-1 --ulimit stack=67108864 -v 
 Refer to [link](notebooks/hapt/README.md) to understand the model selection and evaluation process on HAPT dataset for detecting dance moves in this project.
 ### HAPT Quantized
 Refer to [link](notebooks/hapt_quantized/README.md) to understand the accuracy and latency of models quantized using different methods.
+### HAPT Prelim
+Refer to [link](notebooks/hapt_nus/README.md) to understand the models trained on senior capstone's dataset
 ### HAPT NUS
-Refer to [link](notebooks/hapt_nus/README.md) to understand the models trained for the capstone project
+Refer to [link](notebooks/hapt_nus/README.md) to understand the models trained on my capstone's dataset
