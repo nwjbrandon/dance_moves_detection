@@ -2,11 +2,14 @@ import warnings
 
 import numpy as np
 import torch
+import torch.nn as nn
 from joblib import load
 from scipy import signal, stats
-from utils import DNN, load_dataloader
 
 warnings.filterwarnings("ignore")
+
+activities = ["hair", "listen", "sidepump", "dab", "wipe", "gun", "elbow", "pointhigh"]
+n_labels = len(activities)
 
 
 def scale_data(data, scaler, is_train=False):
@@ -126,7 +129,7 @@ def extract_raw_data_features_per_row(f_n):
     )
 
 
-def extract_raw_data_features(X, n_features=70):
+def extract_raw_data_features(X, n_features=84):
     new_features = np.ones((X.shape[0], n_features))
     rows = X.shape[0]
     cols = X.shape[1]
@@ -140,17 +143,77 @@ def extract_raw_data_features(X, n_features=70):
     return new_features
 
 
-def main():
-    # Prepare model
+class DNN(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.fc1 = nn.Linear(84, 70)
+        self.dp1 = nn.Dropout(0.1)
+
+        self.fc2 = nn.Linear(70, 50)
+        self.dp2 = nn.Dropout(0.1)
+
+        self.fc3 = nn.Linear(50, 20)
+        self.dp3 = nn.Dropout(0.1)
+
+        self.fc4 = nn.Linear(20, n_labels)
+
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.dp1(x)
+
+        x = self.fc2(x)
+        x = self.dp2(x)
+
+        x = self.fc3(x)
+        x = self.dp3(x)
+
+        x = self.fc4(x)
+        return x
+
+
+class Dataset(object):
+    def __init__(self, X, y):
+        self.X = X
+        self.y = y
+
+    def __getitem__(self, idx):
+        data = self.X[idx]
+        target = self.y[idx][0]
+        return data, target
+
+    def __len__(self):
+        return len(self.X)
+
+
+def load_dataloader(X, y):
+    dataset = Dataset(X, y)
+
+    dataloader = torch.utils.data.DataLoader(
+        dataset, batch_size=100, shuffle=True, num_workers=4,
+    )
+
+    return dataloader
+
+
+if __name__ == "__main__":
+    model_path = "dnn_model.pth"
+    scaler_path = "dnn_std_scaler.bin"
+    inputs_path = "inputs.npy"
+    labels_path = "labels.npy"
+
+    # Load data
+    X, y = np.load(inputs_path), np.load(labels_path)
+
+    # Load model
     model = DNN()
-    model.load_state_dict(torch.load("dnn_model.pth"))
+    model.load_state_dict(torch.load(model_path))
     model.eval()
 
-    # Scale data
-    scaler = load("dnn_std_scaler.bin")
+    # Load scaler
+    scaler = load(scaler_path)
 
     # Prepare data
-    _, _, dataloader = load_dataloader()
+    dataloader = load_dataloader(X, y)
 
     # Run inference
     correct = 0
@@ -167,7 +230,3 @@ def main():
         correct += (predicted == labels).sum().item()
 
     print("Accuracy: ", correct / total)
-
-
-if __name__ == "__main__":
-    main()
